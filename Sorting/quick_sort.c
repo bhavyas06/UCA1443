@@ -10,37 +10,28 @@ void swap(int arr[], int i, int j) {
     arr[j] = temp;
 }
 
-void merge(int arr[], int temp[], int left, int mid, int right) {
-    int i=left, j=mid+1;
-
-    for(int k=left; k<=right; k++)
-        temp[k] = arr[k];
-
-    for(int k=left; k<=right; k++) {
-        if(i > mid)
-            arr[k] = temp[j++];
-        else if (j > right)
-            arr[k] = temp[i++];
-        else if(temp[i] < temp[j])
-            arr[k] = temp[i++];
-        else    
-            arr[k] = temp[j++];
-    }
-}
-
-void rec(int arr[], int temp[], int left, int right) {
+void quick_sort_rec(int arr[], int left, int right) {
     if(left >= right)
         return;
-    int mid = left + (right-left)/2;
-    rec(arr, temp, left, mid);
-    rec(arr, temp, mid+1, right);
-    merge(arr, temp, left, mid, right);
+
+    int pivot = nums[left];
+    int i = left+1;
+
+    for(int j=left+1; j<=right; j++) {
+        if(arr[j] <= pivot) {
+            swap(arr, i, j);
+            i++;
+        }
+    }
+
+    i--;
+    swap(arr, left, i);
+    quick_sort_rec(arr, left, i-1);
+    quick_sort_rec(arr, i+1, right);
 }
 
-void mergeSort(int arr[], int n) {
-    int *temp = (int *)malloc(n*sizeof(int));
-    rec(arr, temp, 0, n-1);
-    free(temp);
+void quickSort(int arr[], int n) {
+    quick_sort_rec(arr, 0, n-1);
 }
 
 long long time_elapsed(int n) {
@@ -54,7 +45,7 @@ long long time_elapsed(int n) {
     gettimeofday(&before, NULL);
     long long before_millis = before.tv_sec*1000LL + before.tv_usec/1000;
 
-    mergeSort(arr, n);
+    quickSort(arr, n);
 
     struct timeval after;
     gettimeofday(&after, NULL);
@@ -66,9 +57,9 @@ long long time_elapsed(int n) {
 void test_sample_input() {
     int input[] = {3,1,7,9,5};
     int expected_ouput[] = {1,3,5,7,9};
-    int n = sizeof(input)/sizeof(input[0]);
+    int n = sizeof(input)/sizeof(int);
 
-    mergeSort(input, n);
+    quickSort(input, n);
 
     for(int i=0; i<n; i++) 
         assert(input[i] == expected_ouput[i]);
