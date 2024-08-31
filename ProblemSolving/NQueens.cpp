@@ -61,7 +61,13 @@ public:
 
 int main() {
     vector<vector<string>> ans;
-    ans = solveNQueens(4);
-    
+    Solution obj;
+    ans = obj.solveNQueens(4);
+    for(int i=0; i<ans.size(); i++) {
+        for(int j=0; j<ans[i].length(); i++) 
+            cout<< ans[i][j]<< " ";
+        cout<< endl;
+    }
+
     return 0;
 }
